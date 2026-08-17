@@ -26,6 +26,22 @@ const OUT_DIR = path.join(ROOT, "src/columns");
 const SRC_DIR = path.join(process.env.WRITING_DIR ?? "D:/TAX_Writing", "output");
 const FORCE = process.argv.includes("--force");
 
+// The writing workflow's meta.json carries no author field, so resolve the
+// byline from the site's single source of truth (src/data/site.ts) instead of
+// leaving an unresolved {{AUTHOR_NAME}} token in every imported column.
+function siteAuthorName() {
+  try {
+    const ts = readFileSync(path.join(ROOT, "src/data/site.ts"), "utf8");
+    const block = ts.match(/export const author\s*=\s*\{([\s\S]*?)\}/);
+    const m = block && block[1].match(/name:\s*"([^"]+)"/);
+    if (m && m[1]) return m[1];
+  } catch {
+    /* fall through */
+  }
+  return "{{AUTHOR_NAME}}";
+}
+const SITE_AUTHOR = siteAuthorName();
+
 /**
  * The writing workflow's category vocabulary mapped onto this site's
  * section + topic axes. Edit here when either side gains a value.
@@ -185,7 +201,7 @@ for (const metaFile of metas.sort()) {
     slug,
     section: meta.section ?? mapped.section,
     category: meta.siteCategory ?? mapped.category,
-    authorName: meta.author ?? "{{AUTHOR_NAME}}",
+    authorName: meta.author ?? SITE_AUTHOR,
     authorRole: null,
     excerpt: meta.excerpt ?? "",
     keyQuestion: meta.targetQuestion ?? "",
