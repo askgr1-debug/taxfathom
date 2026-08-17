@@ -28,11 +28,11 @@ export const author = {
   bio: "I work at a tax accounting firm in South Korea. TaxAtlas is a personal project, unconnected to my employer, and everything here is my own work. What I bring to it is a habit built at that job: read the primary source, not a summary of it. Every column is written from the IRS publication, Code section or regulation itself, with the citation attached so you can check it against the source.",
   /**
    * Public profiles, used for Person sameAs in structured data — this is what
-   * a search engine follows to verify the author exists. Percent-encoded
-   * because the LinkedIn vanity path contains Hangul; some crawlers handle
-   * raw non-ASCII IRIs inconsistently, and the encoded form resolves the same.
+   * a search engine follows to verify the author exists. Keep the profile's
+   * display name matching `name` above, or the link corroborates nothing.
+   * If the LinkedIn vanity path changes again, change it here too.
    */
-  sameAs: ["https://www.linkedin.com/in/%EC%9E%AC%ED%98%95-%EC%95%88-74a19726b"] as string[],
+  sameAs: ["https://www.linkedin.com/in/jaehyung-ahn-74a19726b"] as string[],
 } as const;
 
 /**
