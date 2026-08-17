@@ -6,6 +6,7 @@ import Sources from "../../components/Sources.astro";
 import Disclaimer from "../../components/Disclaimer.astro";
 import { site, author, getSection, sections } from "../../data/site";
 import { getAllArticles, getArticleBySlug, formatDate } from "../../data/articles";
+import { ids, organizationEntity, personEntity, websiteEntity } from "../../data/schema";
 
 export function getStaticPaths() {
   return getAllArticles().map((a) => ({ params: { slug: a.slug } }));
@@ -33,31 +34,43 @@ const relatedTop = related.slice(0, 4);
 const base = Astro.site?.toString() ?? site.url;
 const canonical = new URL(`/columns/${article.slug}/`, base).toString();
 
-const jsonLd: unknown[] = [
+const id = ids(base);
+
+// One @graph per page. The Person/Organization/WebSite nodes carry stable
+// @ids; the Article references them by @id instead of restating them, so
+// engines merge everything into the one site entity.
+const graph: unknown[] = [
+  websiteEntity(base),
+  organizationEntity(base),
+  personEntity(base),
   {
-    "@context": "https://schema.org",
     "@type": "Article",
+    "@id": `${canonical}#article`,
     headline: article.title,
     description: article.excerpt,
     datePublished: article.publishedAt,
     dateModified: article.lastReviewed ?? article.publishedAt,
-    author: {
-      "@type": "Person",
-      name: article.authorName,
-      ...(article.authorRole ? { jobTitle: article.authorRole } : {}),
-      ...(author.sameAs.length ? { sameAs: author.sameAs } : {}),
-      url: new URL("/about/", base).toString(),
-    },
-    publisher: {
-      "@type": "Organization",
-      name: site.name,
-      url: base,
-    },
+    author: { "@id": id.person },
+    publisher: { "@id": id.org },
+    isPartOf: { "@id": id.site },
     mainEntityOfPage: { "@type": "WebPage", "@id": canonical },
     articleSection: section.label,
     inLanguage: "en-US",
     url: canonical,
-    ...(article.tags.length ? { keywords: article.tags.join(", ") } : {}),
+    isAccessibleForFree: true,
+    // The question this column answers, and its opening answer, are the parts
+    // a voice/answer engine should lift.
+    speakable: {
+      "@type": "SpeakableSpecification",
+      cssSelector: [".article-keyq p", ".article-excerpt"],
+    },
+    // Subjects, as things rather than a keyword blob — helps topic matching.
+    ...(article.tags.length
+      ? {
+          about: article.tags.map((t) => ({ "@type": "Thing", name: t })),
+          keywords: article.tags.join(", "),
+        }
+      : {}),
     // Primary sources double as machine-readable citations.
     ...(article.sources.length
       ? {
@@ -70,7 +83,6 @@ const jsonLd: unknown[] = [
       : {}),
   },
   {
-    "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "Home", item: base },
@@ -85,8 +97,7 @@ const jsonLd: unknown[] = [
   },
 ];
 if (article.faqItems.length > 0) {
-  jsonLd.push({
-    "@context": "https://schema.org",
+  graph.push({
     "@type": "FAQPage",
     mainEntity: article.faqItems.map((f) => ({
       "@type": "Question",
@@ -95,6 +106,8 @@ if (article.faqItems.length > 0) {
     })),
   });
 }
+
+const jsonLd = [{ "@context": "https://schema.org", "@graph": graph }];
 ---
 
 <Base

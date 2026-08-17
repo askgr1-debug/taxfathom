@@ -3,20 +3,27 @@ import Base from "../layouts/Base.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import { site, author, sections } from "../data/site";
+import { ids, organizationEntity, personEntity, websiteEntity } from "../data/schema";
 
 const base = Astro.site?.toString() ?? site.url;
+const id = ids(base);
+// This page IS the person entity's canonical home (/about/#person), so it
+// carries the full Person node; the AboutPage points at it by @id.
 const jsonLd = [
   {
     "@context": "https://schema.org",
-    "@type": "AboutPage",
-    name: `About ${site.name}`,
-    url: new URL("/about/", base).toString(),
-    mainEntity: {
-      "@type": "Person",
-      name: author.name,
-      description: author.bio,
-      ...(author.sameAs.length ? { sameAs: author.sameAs } : {}),
-    },
+    "@graph": [
+      websiteEntity(base),
+      organizationEntity(base),
+      personEntity(base),
+      {
+        "@type": "AboutPage",
+        name: `About ${site.name}`,
+        url: new URL("/about/", base).toString(),
+        isPartOf: { "@id": id.site },
+        mainEntity: { "@id": id.person },
+      },
+    ],
   },
 ];
 ---

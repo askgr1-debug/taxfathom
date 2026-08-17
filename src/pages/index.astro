@@ -2,8 +2,9 @@
 import Base from "../layouts/Base.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
-import { site, author, sections, categories as CATEGORY_ORDER } from "../data/site";
+import { site, sections, categories as CATEGORY_ORDER } from "../data/site";
 import { getAllArticles, formatDate } from "../data/articles";
+import { organizationEntity, personEntity, websiteEntity } from "../data/schema";
 
 const articles = getAllArticles();
 const lead = articles[0];
@@ -24,20 +25,7 @@ const base = Astro.site?.toString() ?? site.url;
 const homeJsonLd = [
   {
     "@context": "https://schema.org",
-    "@type": "WebSite",
-    name: site.name,
-    url: base,
-    inLanguage: "en-US",
-    description: site.description,
-    publisher: { "@type": "Organization", name: site.name, url: base },
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    name: site.name,
-    url: base,
-    description: site.description,
-    founder: { "@type": "Person", name: author.name },
+    "@graph": [websiteEntity(base), organizationEntity(base), personEntity(base)],
   },
 ];
 ---
