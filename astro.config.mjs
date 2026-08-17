@@ -6,7 +6,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 // Production domain — canonical URLs, sitemap and RSS are all built from this.
-const SITE = "https://taxatlas.com";
+const SITE = "https://taxfathom.com";
 
 // Tax rules change; a column's lastReviewed date is the honest lastmod signal.
 const contentDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "src/columns");

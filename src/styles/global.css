@@ -1,5 +1,5 @@
 ﻿/* ============================================================
-   TaxAtlas - newsroom stylesheet
+   TaxFathom - newsroom stylesheet
    (Manus 목업 client/src/index.css의 커스텀 스타일을 순수 CSS로 이식,
     Tailwind 의존 제거 + 상세페이지/박스 라벨 스타일 보강)
    ============================================================ */
@@ -1556,7 +1556,7 @@ img {
 .article-cta .cta-label { font-size: 12px; }
 
 /* ============================================================
-   TaxAtlas overrides — Latin typography, section colors,
+   TaxFathom overrides — Latin typography, section colors,
    source-citation + disclosure blocks (added on top of the
    ported newsroom base; keep all new rules in this block)
    ============================================================ */

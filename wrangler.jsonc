@@ -1,6 +1,6 @@
 {
   // Cloudflare static asset deployment — serves the Astro dist/ output as-is.
-  "name": "taxatlas",
+  "name": "taxfathom",
   "compatibility_date": "2024-12-01",
   "assets": {
     "directory": "./dist",

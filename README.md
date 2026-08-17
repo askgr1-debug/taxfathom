@@ -1,9 +1,9 @@
-# TaxAtlas
+# TaxFathom
 
 Plain-English columns on U.S. federal tax rules. Astro static site, deployed to
 Cloudflare Pages from GitHub.
 
-**Domain:** taxatlas.com (verify it is still unregistered and clear the name at
+**Domain:** taxfathom.com (verify it is still unregistered and clear the name at
 [USPTO TESS](https://tmsearch.uspto.gov/) before buying).
 
 ## Structure
@@ -88,7 +88,9 @@ Publishing: `powershell -ExecutionPolicy Bypass -File D:\TAX_BLOG\publish.ps1`
       (`node scripts/make-og.mjs` only paints a branded placeholder).
 - [ ] Rewrite `src/pages/privacy.astro` to match the analytics, ad network and
       newsletter provider you actually use.
-- [ ] `git init`, push to GitHub, connect Cloudflare Pages.
+- [ ] Rename the GitHub repo from `taxatlas` to `taxfathom` (Settings →
+      General), then `git remote set-url origin` to match.
+- [ ] Connect Cloudflare Pages.
 - [ ] Verify the site in Google Search Console and Bing Webmaster Tools.
 
 ## Content plan

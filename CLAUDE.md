@@ -1,4 +1,4 @@
-# TaxAtlas — working rules
+# TaxFathom — working rules
 
 Astro static site publishing plain-English columns on **U.S. federal tax** rules.
 Audience: U.S. readers, in English. Revenue: display ads, affiliate links,

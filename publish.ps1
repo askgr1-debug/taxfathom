@@ -1,5 +1,5 @@
 <#
-  publish.ps1 — TaxAtlas automated publishing
+  publish.ps1 — TaxFathom automated publishing
   ------------------------------------------------------------
   Imports new drafts from the writing workflow, validates the column JSON,
   commits anything new, pushes to GitHub, and lets Cloudflare Pages deploy.

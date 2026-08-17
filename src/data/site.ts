@@ -1,4 +1,4 @@
-// TaxAtlas — site identity, sections and author.
+// TaxFathom — site identity, sections and author.
 //
 // IMPORTANT: this site carries no professional tax credential. Nothing here
 // may describe the author as a CPA, EA, "tax advisor" or "accountant" — those
@@ -7,10 +7,10 @@
 // Treasury regulations) on every factual claim instead.
 
 export const site = {
-  name: "TaxAtlas",
-  wordmark: "TAX ATLAS",
-  tagline: "A plain-English map of the U.S. tax code",
-  url: "https://taxatlas.com",
+  name: "TaxFathom",
+  wordmark: "TAX FATHOM",
+  tagline: "U.S. tax rules, read at the source",
+  url: "https://taxfathom.com",
   locale: "en-US",
   description:
     "Plain-English columns on U.S. federal tax rules for the self-employed, cross-border filers, property owners and individual taxpayers. Every claim is cited to an IRS publication or the Internal Revenue Code.",
@@ -23,9 +23,9 @@ export const site = {
 export const author = {
   name: "Jaehyung Ahn",
   /** Shown under the byline. Describe what you do, never a title you don't hold. */
-  role: "Writer, TaxAtlas",
+  role: "Writer, TaxFathom",
   credential: null as string | null,
-  bio: "I work at a tax accounting firm in South Korea. TaxAtlas is a personal project, unconnected to my employer, and everything here is my own work. What I bring to it is a habit built at that job: read the primary source, not a summary of it. Every column is written from the IRS publication, Code section or regulation itself, with the citation attached so you can check it against the source.",
+  bio: "I work at a tax accounting firm in South Korea. TaxFathom is a personal project, unconnected to my employer, and everything here is my own work. What I bring to it is a habit built at that job: read the primary source, not a summary of it. Every column is written from the IRS publication, Code section or regulation itself, with the citation attached so you can check it against the source.",
   /**
    * Public profiles, used for Person sameAs in structured data — this is what
    * a search engine follows to verify the author exists. Keep the profile's
