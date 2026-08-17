@@ -53,7 +53,7 @@ const PAD = 96;
 ctx.fillStyle = MUTE;
 ctx.font = "22px 'OG Mono'";
 ctx.textBaseline = "alphabetic";
-letterspaced(ctx, "U.S. FEDERAL TAX — EXPLAINED, WITH THE SOURCE", PAD, 168, 3.5);
+letterspaced(ctx, "FEDERAL TAX, EXPLAINED IN PLAIN ENGLISH", PAD, 168, 3.5);
 
 // Wordmark
 ctx.fillStyle = INK;
