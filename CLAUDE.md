@@ -1,12 +1,12 @@
 # TaxAtlas — working rules
 
-Astro static site publishing plain-English columns to **U.S. federal tax** rules.
+Astro static site publishing plain-English columns on **U.S. federal tax** rules.
 Audience: U.S. readers, in English. Revenue: display ads, affiliate links,
 newsletter. Not a lead generator for any firm.
 
 ## Hard rules — never break these
 
-1. **No credential may be claimed.** The author, Jae Hyung Ahn, is not a CPA,
+1. **No credential may be claimed.** The author, Jaehyung Ahn, is not a CPA,
    enrolled agent or tax attorney. Never write "as your CPA", "our tax
    advisors", "we can review your return", or anything implying representation
    before the IRS. `scripts/check-articles.mjs` fails the build on these.

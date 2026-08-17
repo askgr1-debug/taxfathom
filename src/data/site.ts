@@ -21,7 +21,7 @@ export const site = {
 // the author is an employee there, not a licensed Korean tax accountant — so
 // no title of any kind goes in `role`, and the firm is never named.
 export const author = {
-  name: "Jae Hyung Ahn",
+  name: "Jaehyung Ahn",
   /** Shown under the byline. Describe what you do, never a title you don't hold. */
   role: "Writer, TaxAtlas",
   credential: null as string | null,
