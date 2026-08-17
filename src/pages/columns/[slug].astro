@@ -1,0 +1,216 @@
+---
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import Sources from "../../components/Sources.astro";
+import Disclaimer from "../../components/Disclaimer.astro";
+import { site, author, getSection, sections } from "../../data/site";
+import { getAllArticles, getArticleBySlug, formatDate } from "../../data/articles";
+import { resolveCta } from "../../data/cta";
+
+export function getStaticPaths() {
+  return getAllArticles().map((a) => ({ params: { slug: a.slug } }));
+}
+
+const { slug } = Astro.params;
+const article = getArticleBySlug(slug!);
+if (!article) {
+  return Astro.redirect("/404");
+}
+
+const section = getSection(article.section);
+const cta = resolveCta(article);
+
+// Same-topic columns first — internal linking builds the topic cluster.
+const all = getAllArticles();
+const related = all.filter((a) => a.slug !== article.slug && a.category === article.category);
+if (related.length < 3) {
+  const more = all.filter(
+    (a) => a.slug !== article.slug && a.section === article.section && a.category !== article.category
+  );
+  related.push(...more);
+}
+const relatedTop = related.slice(0, 4);
+
+const base = Astro.site?.toString() ?? site.url;
+const canonical = new URL(`/columns/${article.slug}/`, base).toString();
+
+const jsonLd: unknown[] = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: article.title,
+    description: article.excerpt,
+    datePublished: article.publishedAt,
+    dateModified: article.lastReviewed ?? article.publishedAt,
+    author: {
+      "@type": "Person",
+      name: article.authorName,
+      ...(article.authorRole ? { jobTitle: article.authorRole } : {}),
+      ...(author.sameAs.length ? { sameAs: author.sameAs } : {}),
+      url: new URL("/about/", base).toString(),
+    },
+    publisher: {
+      "@type": "Organization",
+      name: site.name,
+      url: base,
+    },
+    mainEntityOfPage: { "@type": "WebPage", "@id": canonical },
+    articleSection: section.label,
+    inLanguage: "en-US",
+    url: canonical,
+    ...(article.tags.length ? { keywords: article.tags.join(", ") } : {}),
+    // Primary sources double as machine-readable citations.
+    ...(article.sources.length
+      ? {
+          citation: article.sources.map((s) => ({
+            "@type": "CreativeWork",
+            name: s.label,
+            url: s.url,
+          })),
+        }
+      : {}),
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: base },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: section.label,
+        item: new URL(`/#${section.id}`, base).toString(),
+      },
+      { "@type": "ListItem", position: 3, name: article.title, item: canonical },
+    ],
+  },
+];
+if (article.faqItems.length > 0) {
+  jsonLd.push({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: article.faqItems.map((f) => ({
+      "@type": "Question",
+      name: f.question,
+      acceptedAnswer: { "@type": "Answer", text: f.answer },
+    })),
+  });
+}
+---
+
+<Base
+  title={`${article.title} | ${site.name}`}
+  description={article.excerpt}
+  path={`/columns/${article.slug}/`}
+  ogType="article"
+  jsonLd={jsonLd}
+>
+  <div class="article-page">
+    <Header />
+
+    <main class="article-main">
+      <a href="/" class="article-back">← All columns</a>
+      <p class="article-eyebrow">{section.label} <span>/</span> {article.category}</p>
+
+      {article.tags.length > 0 && (
+        <div class="article-tags">
+          {article.tags.map((tag) => <span>#{tag}</span>)}
+        </div>
+      )}
+
+      <h1 class="article-title">{article.title}</h1>
+      <p class="article-excerpt">{article.excerpt}</p>
+
+      <div class="article-byline-bar">
+        <span>{article.authorName}{article.authorRole ? ` · ${article.authorRole}` : ""}</span>
+        <i aria-hidden="true"></i>
+        <time datetime={article.publishedAt ?? undefined}>{formatDate(article.publishedAt, true)}</time>
+        <i aria-hidden="true"></i>
+        <span>{article.readingTimeMinutes} min read</span>
+        {article.taxYear && (<><i aria-hidden="true"></i><span>Tax year {article.taxYear}</span></>)}
+      </div>
+
+      {article.coverImageUrl && (
+        <figure class="article-cover">
+          <img src={article.coverImageUrl} alt={article.coverImageAlt ?? ""} />
+        </figure>
+      )}
+
+      <div class="article-keyq">
+        <span>The question</span>
+        <p>{article.keyQuestion}</p>
+      </div>
+
+      <article class="column-html-prose" set:html={article.bodyHtml} />
+
+      {article.faqItems.length > 0 && (
+        <section class="article-faq">
+          <span>Q&A</span>
+          <h2>Frequently asked</h2>
+          <div class="article-faq-list">
+            {article.faqItems.map((faq) => (
+              <div class="article-faq-item">
+                <h3>{faq.question}</h3>
+                <p>{faq.answer}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <Sources sources={article.sources} />
+
+      {article.lastReviewed && (
+        <p class="article-reviewed">
+          Rules last checked against the sources above on
+          <b>{formatDate(article.lastReviewed, true)}</b>
+        </p>
+      )}
+
+      {relatedTop.length > 0 && (
+        <section class="article-related">
+          <span>Keep reading</span>
+          <h2>More on {article.category}</h2>
+          <ul>
+            {relatedTop.map((r) => (
+              <li>
+                <a href={`/columns/${r.slug}/`}>
+                  <span class="rel-meta">
+                    <span class={`news-brand brand-${r.section}`}><i aria-hidden="true"></i>{sections.find((s) => s.id === r.section)?.label}</span>
+                    <time>{formatDate(r.publishedAt)}</time>
+                  </span>
+                  <strong>{r.title}</strong>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      <section class="article-cta">
+        <div class="cta-label">{cta.eyebrow}</div>
+        <h3>{cta.heading}</h3>
+        {cta.body.map((line) => <p>{line}</p>)}
+        <form class="cta-subscribe" action={cta.formAction} method="post" target="_blank">
+          <label class="sr-only" for="cta-email">Email address</label>
+          <input
+            type="email"
+            id="cta-email"
+            name="email"
+            required
+            placeholder="you@example.com"
+            autocomplete="email"
+          />
+          <button type="submit" class="cta-btn">{cta.buttonLabel} →</button>
+        </form>
+        {cta.affiliateNote && <p class="affiliate-note">{cta.affiliateNote}</p>}
+        <p class="cta-brandmark">{site.wordmark}</p>
+      </section>
+
+      <Disclaimer taxYear={article.taxYear} />
+    </main>
+
+    <Footer />
+  </div>
+</Base>

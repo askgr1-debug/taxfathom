@@ -1,0 +1,20 @@
+---
+import Base from "../layouts/Base.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { site } from "../data/site";
+---
+<Base title={`Page not found | ${site.name}`} path="/404" noindex>
+  <div class="article-page">
+    <Header />
+    <main class="static-main">
+      <p class="static-eyebrow">404</p>
+      <h1>That page isn't here</h1>
+      <p>
+        The column may have been renamed, or the link may be wrong.
+        <a href="/">Browse all columns</a> or search from the hub.
+      </p>
+    </main>
+    <Footer />
+  </div>
+</Base>

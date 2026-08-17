@@ -1,0 +1,374 @@
+---
+import Base from "../layouts/Base.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { site, author, sections, categories as CATEGORY_ORDER } from "../data/site";
+import { getAllArticles, formatDate } from "../data/articles";
+
+const articles = getAllArticles();
+const lead = articles[0];
+
+// Only show topic filters that actually have columns behind them.
+const present = new Set(articles.map((a) => a.category));
+const categories = CATEGORY_ORDER.filter((c) => c === "All" || present.has(c));
+
+const sectionCounts = new Map<string, number>();
+for (const a of articles) sectionCounts.set(a.section, (sectionCounts.get(a.section) ?? 0) + 1);
+
+const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? "" : "s"}`;
+
+const searchText = (a: (typeof articles)[number]) =>
+  `${a.title} ${a.excerpt} ${a.keyQuestion} ${a.tags.join(" ")}`.toLowerCase();
+
+const base = Astro.site?.toString() ?? site.url;
+const homeJsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: site.name,
+    url: base,
+    inLanguage: "en-US",
+    description: site.description,
+    publisher: { "@type": "Organization", name: site.name, url: base },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: site.name,
+    url: base,
+    description: site.description,
+    founder: { "@type": "Person", name: author.name },
+  },
+];
+---
+
+<Base title={`${site.name} — ${site.tagline}`} path="/" jsonLd={homeJsonLd}>
+  <div class="newsroom-page">
+    <Header />
+
+    <main id="top">
+      <section class="news-masthead page-shell" aria-labelledby="page-title">
+        <div class="masthead-topline"><span>{site.wordmark}</span><span>U.S. federal tax, explained</span></div>
+        <div class="masthead-title">
+          <h1 id="page-title">{site.tagline}</h1>
+          <p>Every column answers one question and cites the IRS source it rests on.</p>
+        </div>
+      </section>
+
+      {lead && (
+        <section class="lead-news page-shell" id="latest" aria-labelledby="lead-title">
+          <article class="lead-news-grid">
+            <aside class="lead-news-rail">
+              <span>Latest column</span>
+              <i aria-hidden="true"></i>
+              <time>{formatDate(lead.publishedAt)}</time>
+              <div class="rail-question">
+                <small>The question</small>
+                <strong>{lead.keyQuestion}</strong>
+              </div>
+              <div class="rail-principle">
+                <small>How we work</small>
+                <p>Rules are read at the source — IRS publications, the Internal Revenue Code — then written out in plain English.</p>
+              </div>
+              <div class="rail-count">
+                <small>Published</small>
+                <b>{String(articles.length).padStart(2, "0")} {articles.length === 1 ? "column" : "columns"}</b>
+              </div>
+            </aside>
+            <div class="lead-news-copy">
+              <div class="news-row-meta">
+                <span class={`news-brand brand-${lead.section}`}><i aria-hidden="true"></i>{sections.find((s) => s.id === lead.section)?.label}</span>
+                <span>{lead.category}</span>
+              </div>
+              <h2 id="lead-title"><a href={`/columns/${lead.slug}/`}>{lead.title}</a></h2>
+              <p class="lead-news-summary">{lead.excerpt}</p>
+              <div class="article-byline">
+                <span class="article-byline-label">Column</span>
+                <time>{formatDate(lead.publishedAt)}</time>
+                <i aria-hidden="true"></i>
+                <span>{lead.authorName}</span>
+                <i aria-hidden="true"></i>
+                <span>{lead.readingTimeMinutes} min read</span>
+              </div>
+              <a href={`/columns/${lead.slug}/`} class="lead-news-link">Read the column →</a>
+            </div>
+            <aside class="lead-news-brief">
+              <span>In short</span>
+              <p>{lead.keyQuestion}</p>
+              <div>
+                <span class={`news-brand brand-${lead.section}`}><i aria-hidden="true"></i>{sections.find((s) => s.id === lead.section)?.label}</span>
+                <b>{lead.taxYear ? `Tax year ${lead.taxYear}` : `${lead.readingTimeMinutes} min read`}</b>
+              </div>
+            </aside>
+          </article>
+        </section>
+      )}
+
+      <section class="news-filters" id="filters" aria-label="Filter columns">
+        <div class="page-shell">
+          <div class="brand-strip" role="group" aria-label="Section">
+            <span>Section</span>
+            <button type="button" class="is-active" data-section="all" aria-pressed="true">All</button>
+            {sections.map((s) => (
+              <button type="button" data-section={s.id} aria-pressed="false">{s.label}</button>
+            ))}
+          </div>
+          <div class="topic-strip">
+            <span>Topic</span>
+            <div class="topic-scroll" role="group" aria-label="Topic">
+              {categories.map((category, i) => (
+                <button type="button" class={i === 0 ? "is-active" : ""} data-category={category} aria-pressed={i === 0 ? "true" : "false"}>{category}</button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="article-desk page-shell" id="articles" aria-labelledby="articles-title">
+        <div class="article-desk-head">
+          <div>
+            <span>All columns</span>
+            <h2 id="articles-title">Latest first</h2>
+          </div>
+          <div class="article-search">
+            <input type="search" id="searchInput" placeholder="Search columns" aria-label="Search columns" />
+            <button type="button" id="searchClear" aria-label="Clear search" hidden>✕</button>
+          </div>
+        </div>
+        <div class="archive-layout">
+          <div class="archive-stream">
+            <div class="article-desk-info">
+              <span id="filterLabel">All columns · newest first</span>
+              <b><span id="visibleCount">{articles.length}</span> <span id="visibleUnit">{articles.length === 1 ? "column" : "columns"}</span></b>
+            </div>
+            <div class="news-list" id="newsList">
+              {articles.map((article) => (
+                <article
+                  class="news-row"
+                  data-section={article.section}
+                  data-category={article.category}
+                  data-search={searchText(article)}
+                >
+                  <time class="news-row-date">{formatDate(article.publishedAt)}</time>
+                  <div class="news-row-copy">
+                    <div class="news-row-meta">
+                      <span class={`news-brand brand-${article.section}`}><i aria-hidden="true"></i>{sections.find((s) => s.id === article.section)?.label}</span>
+                      <span>{article.category}</span>
+                    </div>
+                    <h3><a href={`/columns/${article.slug}/`}>{article.title}</a></h3>
+                    <p>{article.excerpt}</p>
+                  </div>
+                  <a href={`/columns/${article.slug}/`} class="news-row-link" aria-label={`Read ${article.title}`}>Read →</a>
+                </article>
+              ))}
+            </div>
+            <div class="news-empty compact" id="emptyState" hidden>
+              <p id="emptyMsg">No columns match those filters.</p>
+              <button type="button" class="empty-reset" id="resetFilters">Show all columns →</button>
+            </div>
+            <nav class="pager" id="pager" aria-label="Column pages" hidden></nav>
+          </div>
+          <aside class="archive-rail">
+            <section>
+              <span>Sections</span>
+              <h3>What we cover</h3>
+              <ol>
+                {sections.map((item, index) => (
+                  <li id={item.id}>
+                    <b>{String(index + 1).padStart(2, "0")}</b>
+                    <div>
+                      <strong>{item.label}</strong>
+                      <p>{item.topics}</p>
+                      <em>{item.examples} · {plural(sectionCounts.get(item.id) ?? 0, "column")}</em>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </section>
+            <section class="archive-note">
+              <span>Editorial</span>
+              <p>
+                No credential is claimed here. Authority comes from the sources —
+                every column links the IRS publication or Code section behind it.
+                <a href="/disclaimer/"> Read the policy</a>.
+              </p>
+            </section>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <Footer />
+  </div>
+
+  <script>
+    const PER_PAGE = 12;
+    const sectionLabels: Record<string, string> = {
+      all: "All columns",
+      selfemployed: "Self-Employed",
+      crossborder: "Cross-Border",
+      property: "Property",
+      personal: "Personal",
+    };
+
+    let activeSection = "all";
+    let activeCategory = "All";
+    let query = "";
+    let currentPage = 1;
+    let filtered: HTMLElement[] = [];
+
+    const rows = Array.from(document.querySelectorAll<HTMLElement>(".news-row"));
+    const countEl = document.getElementById("visibleCount")!;
+    const unitEl = document.getElementById("visibleUnit")!;
+    const labelEl = document.getElementById("filterLabel")!;
+    const emptyEl = document.getElementById("emptyState") as HTMLElement;
+    const emptyMsgEl = document.getElementById("emptyMsg") as HTMLElement;
+    const listEl = document.getElementById("newsList") as HTMLElement;
+    const pagerEl = document.getElementById("pager") as HTMLElement;
+    const articlesEl = document.getElementById("articles") as HTMLElement;
+
+    function computeFiltered() {
+      filtered = rows.filter((row) => {
+        const okSection = activeSection === "all" || row.dataset.section === activeSection;
+        const okCat = activeCategory === "All" || row.dataset.category === activeCategory;
+        const okSearch = !query || (row.dataset.search ?? "").includes(query);
+        return okSection && okCat && okSearch;
+      });
+    }
+
+    // Page numbers around the current page, with first/last always shown.
+    function pageWindow(pages: number, current: number): (number | "…")[] {
+      const set = new Set<number>([1, pages, current, current - 1, current + 1]);
+      const arr = [...set].filter((p) => p >= 1 && p <= pages).sort((a, b) => a - b);
+      const out: (number | "…")[] = [];
+      let prev = 0;
+      for (const p of arr) {
+        if (p - prev > 1) out.push("…");
+        out.push(p);
+        prev = p;
+      }
+      return out;
+    }
+
+    function renderPager(pages: number) {
+      if (pages <= 1) {
+        pagerEl.innerHTML = "";
+        pagerEl.hidden = true;
+        return;
+      }
+      pagerEl.hidden = false;
+      let html = `<button class="pager-btn" data-page="prev"${currentPage === 1 ? " disabled" : ""}>← Prev</button>`;
+      for (const item of pageWindow(pages, currentPage)) {
+        html +=
+          item === "…"
+            ? `<span class="pager-gap">…</span>`
+            : `<button class="pager-btn pager-num${item === currentPage ? " is-active" : ""}" data-page="${item}">${item}</button>`;
+      }
+      html += `<button class="pager-btn" data-page="next"${currentPage === pages ? " disabled" : ""}>Next →</button>`;
+      pagerEl.innerHTML = html;
+      pagerEl.querySelectorAll<HTMLButtonElement>("button[data-page]").forEach((b) =>
+        b.addEventListener("click", () => {
+          const v = b.dataset.page!;
+          const pages2 = Math.max(1, Math.ceil(filtered.length / PER_PAGE));
+          if (v === "prev") currentPage = Math.max(1, currentPage - 1);
+          else if (v === "next") currentPage = Math.min(pages2, currentPage + 1);
+          else currentPage = Number(v);
+          renderPage();
+          articlesEl.scrollIntoView({ behavior: "smooth", block: "start" });
+        })
+      );
+    }
+
+    function renderPage() {
+      const total = filtered.length;
+      const pages = Math.max(1, Math.ceil(total / PER_PAGE));
+      if (currentPage > pages) currentPage = pages;
+      if (currentPage < 1) currentPage = 1;
+      rows.forEach((r) => r.classList.add("is-hidden"));
+      const start = (currentPage - 1) * PER_PAGE;
+      filtered.slice(start, start + PER_PAGE).forEach((r) => r.classList.remove("is-hidden"));
+      countEl.textContent = String(total);
+      unitEl.textContent = total === 1 ? "column" : "columns";
+      emptyEl.hidden = total !== 0;
+      listEl.hidden = total === 0;
+      if (total === 0) {
+        emptyMsgEl.textContent = query
+          ? `No results for “${query}”.`
+          : `No columns yet in ${sectionLabels[activeSection]}${activeCategory !== "All" ? ` · ${activeCategory}` : ""}.`;
+      }
+      renderPager(pages);
+    }
+
+    function apply() {
+      currentPage = 1;
+      computeFiltered();
+      labelEl.innerHTML = query
+        ? `<mark>“${query}”</mark> results`
+        : `${sectionLabels[activeSection]} · newest first`;
+      renderPage();
+    }
+
+    document.querySelectorAll<HTMLButtonElement>(".brand-strip button").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".brand-strip button").forEach((b) => {
+          b.classList.remove("is-active");
+          b.setAttribute("aria-pressed", "false");
+        });
+        btn.classList.add("is-active");
+        btn.setAttribute("aria-pressed", "true");
+        activeSection = btn.dataset.section!;
+        apply();
+      });
+    });
+
+    document.querySelectorAll<HTMLButtonElement>(".topic-strip button").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".topic-strip button").forEach((b) => {
+          b.classList.remove("is-active");
+          b.setAttribute("aria-pressed", "false");
+        });
+        btn.classList.add("is-active");
+        btn.setAttribute("aria-pressed", "true");
+        activeCategory = btn.dataset.category!;
+        apply();
+      });
+    });
+
+    const searchInput = document.getElementById("searchInput") as HTMLInputElement;
+    const searchClear = document.getElementById("searchClear") as HTMLButtonElement;
+    searchInput.addEventListener("input", () => {
+      query = searchInput.value.trim().toLowerCase();
+      searchClear.hidden = query.length === 0;
+      apply();
+    });
+    searchClear.addEventListener("click", () => {
+      searchInput.value = "";
+      query = "";
+      searchClear.hidden = true;
+      apply();
+      searchInput.focus();
+    });
+
+    const resetBtn = document.getElementById("resetFilters");
+    resetBtn?.addEventListener("click", () => {
+      activeSection = "all";
+      activeCategory = "All";
+      query = "";
+      searchInput.value = "";
+      searchClear.hidden = true;
+      document.querySelectorAll<HTMLButtonElement>(".brand-strip button").forEach((b) => {
+        const on = b.dataset.section === "all";
+        b.classList.toggle("is-active", on);
+        b.setAttribute("aria-pressed", String(on));
+      });
+      document.querySelectorAll<HTMLButtonElement>(".topic-strip button").forEach((b) => {
+        const on = b.dataset.category === "All";
+        b.classList.toggle("is-active", on);
+        b.setAttribute("aria-pressed", String(on));
+      });
+      apply();
+    });
+
+    apply();
+  </script>
+</Base>

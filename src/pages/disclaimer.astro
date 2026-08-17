@@ -1,0 +1,83 @@
+---
+import Base from "../layouts/Base.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { site } from "../data/site";
+---
+<Base
+  title={`Editorial policy & disclaimer | ${site.name}`}
+  description="What this site is, what it is not, and how it is funded."
+  path="/disclaimer/"
+>
+  <div class="article-page">
+    <Header />
+    <main class="static-main">
+      <p class="static-eyebrow">Editorial policy</p>
+      <h1>Editorial policy &amp; disclaimer</h1>
+
+      <h2>Not tax advice</h2>
+      <p>
+        Everything on {site.name} is general information about U.S. federal tax
+        rules. It is not tax, legal, accounting or financial advice, and it is not
+        a substitute for advice from a licensed professional who knows your facts.
+        Reading this site, subscribing to the newsletter or contacting us does not
+        create a client relationship of any kind.
+      </p>
+      <p>
+        The author is not a Certified Public Accountant, an enrolled agent or a tax
+        attorney, is not licensed to practice before the IRS, and does not prepare
+        or review returns. Before acting on anything you read here, check the cited
+        sources and consider consulting a licensed tax professional.
+      </p>
+
+      <h2>Federal rules only</h2>
+      <p>
+        Unless a column says otherwise, it describes federal rules. State and local
+        tax law differs, sometimes sharply, and a federal answer can be the wrong
+        answer in your state.
+      </p>
+
+      <h2>Accuracy and dates</h2>
+      <p>
+        Tax rules change every year, and mid-year changes happen. Year-specific
+        columns carry the tax year they describe and the date the rules were last
+        checked. If a cited source has changed since that date, the source governs,
+        not this site. Report an error and it will be corrected on the page with an
+        updated review date.
+      </p>
+
+      <h2>Sources</h2>
+      <p>
+        Columns cite primary sources — IRS publications and form instructions, the
+        Internal Revenue Code, and Treasury regulations. Secondary commentary is
+        used only where it is labeled as such. Links to sources open externally and
+        are not paid placements.
+      </p>
+
+      <h2>Advertising and affiliate disclosure</h2>
+      <p>
+        This site is funded by display advertising and affiliate links. When you
+        buy through an affiliate link, {site.name} may earn a commission at no
+        additional cost to you. Affiliate relationships never determine what a
+        column says, which rule is described, or which product is recommended.
+        Columns that contain affiliate links say so on the page.
+      </p>
+
+      <h2>No warranty</h2>
+      <p>
+        The content is provided "as is," without warranty of any kind. To the
+        fullest extent permitted by law, {site.name} and its author are not liable
+        for any loss arising from reliance on this site, including penalties,
+        interest or additional tax.
+      </p>
+
+      <h2>IRS Circular 230 notice</h2>
+      <p>
+        Nothing on this site is a covered opinion or written tax advice within the
+        meaning of Treasury Department Circular 230, and nothing here may be used
+        to avoid tax penalties.
+      </p>
+    </main>
+    <Footer />
+  </div>
+</Base>

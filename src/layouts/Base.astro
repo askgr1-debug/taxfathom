@@ -1,0 +1,97 @@
+---
+import "../styles/global.css";
+import { site } from "../data/site";
+
+export interface Props {
+  title: string;
+  description?: string;
+  /** Page path, e.g. "/" or "/columns/foo" — used to build the canonical URL. */
+  path?: string;
+  image?: string | null;
+  /** Structured data objects. */
+  jsonLd?: unknown[];
+  ogType?: string;
+  /** Set on pages that should not be indexed (thank-you pages, etc.). */
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description = site.description,
+  path = "/",
+  image = null,
+  jsonLd = [],
+  ogType = "website",
+  noindex = false,
+} = Astro.props;
+
+const base = Astro.site ?? site.url;
+const canonical = new URL(path, base).toString();
+const ogImage = image ?? new URL("/og-default.png", base).toString();
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Light-only by design. Declaring it stops the browser from auto-darkening
+         form controls and scrollbars for readers whose OS is in dark mode. -->
+    <meta name="color-scheme" content="light" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta
+      name="robots"
+      content={noindex ? "noindex, nofollow" : "index, follow, max-snippet:-1, max-image-preview:large"}
+    />
+    <link rel="canonical" href={canonical} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="application/rss+xml" title={`${site.name} RSS`} href="/rss.xml" />
+
+    <!-- Headline serif, loaded without blocking render. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap"
+      />
+    </noscript>
+
+    {
+      jsonLd.length > 0 && (
+        <script
+          type="application/ld+json"
+          set:html={JSON.stringify(jsonLd.length === 1 ? jsonLd[0] : jsonLd)}
+        />
+      )
+    }
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

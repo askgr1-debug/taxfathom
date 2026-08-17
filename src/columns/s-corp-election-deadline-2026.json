@@ -1,0 +1,66 @@
+{
+  "issueNumber": 1,
+  "title": "S-corp election deadline for the 2026 tax year",
+  "slug": "s-corp-election-deadline-2026",
+  "section": "selfemployed",
+  "category": "Entity choice",
+  "authorName": "Jae Hyung Ahn",
+  "authorRole": null,
+  "excerpt": "A calendar-year LLC or corporation generally has to file Form 2553 by March 16, 2026 for S status to cover all of 2026 — with a late-election path if it is missed.",
+  "keyQuestion": "When is the deadline to elect S-corporation status for the 2026 tax year?",
+  "bodyHtml": "<p>The deadline is earlier than most people expect, and it is not the tax return deadline. For an existing calendar-year LLC or corporation that wants S-corporation treatment to apply to <em>all</em> of 2026, Form 2553 generally has to be filed by <strong>March 16, 2026</strong>. Miss it and the election normally takes effect for 2027 instead — unless you qualify for late-election relief, which is covered further down.</p>\n\n<div class=\"highlight-box\"><p><strong>The rule in one line.</strong> Form 2553 is due no later than two months and 15 days after the beginning of the tax year the election is to take effect, or at any time during the preceding tax year.</p></div>\n\n<h2>Why March 16 and not March 15</h2>\n<p>Two months and 15 days after January 1 is March 15. In 2026, March 15 falls on a Sunday, and when a filing deadline lands on a weekend or legal holiday it moves to the next business day. That makes the operative date <strong>Monday, March 16, 2026</strong>.</p>\n<p>Note what this deadline is not. It is not tied to when you formed the entity, when you started making money, or when your return is due. It is measured from the start of the tax year you want the election to cover.</p>\n\n<h2>Newly formed entities are measured differently</h2>\n<p>If the entity's first tax year begins partway through 2026, the clock starts then — two months and 15 days from the beginning of that first tax year, not from January 1. An LLC whose first tax year begins on July 1, 2026 would be looking at mid-September 2026, not March.</p>\n<p>The first tax year begins on the earliest date the entity has shareholders, acquires assets, or begins doing business — whichever happens first. Formation paperwork alone does not necessarily start it.</p>\n\n<h2>You can also file early</h2>\n<p>Filing at any time during the preceding tax year works too. An entity that decides in October 2025 that it wants S status for 2026 can file then and stop worrying about March.</p>\n\n<h2>What has to be true before you file</h2>\n<p>The deadline only matters if the entity is eligible in the first place. An S corporation must be a domestic entity and must meet all of the following:</p>\n<ul>\n<li>No more than 100 shareholders.</li>\n<li>Only allowable shareholders — individuals, certain trusts and estates. Partnerships, corporations and non-resident alien individuals cannot hold shares.</li>\n<li>Only one class of stock.</li>\n<li>Not an ineligible corporation (certain financial institutions, insurance companies and domestic international sales corporations).</li>\n</ul>\n<p>Every shareholder has to consent to the election, and their consent is part of Form 2553 itself. One shareholder who will not sign is enough to stop the election.</p>\n\n<div class=\"warning-box\"><span class=\"label\">Watch this</span><p>The one-class-of-stock requirement is about economic rights, not labels. Differences in voting rights are allowed; differences in distribution or liquidation rights are not. Operating agreements written for a multi-member LLC frequently contain preferred returns or disproportionate distributions that quietly break this test.</p></div>\n\n<h2>If the deadline has already passed</h2>\n<p>A missed deadline is not always fatal. The IRS provides a simplified late-election procedure, and in broad terms it requires that:</p>\n<ul>\n<li>the entity intended to be classified as an S corporation as of the intended effective date;</li>\n<li>it failed to qualify solely because the election was not filed on time;</li>\n<li>it has reasonable cause for the failure and acted diligently to fix it once discovered; and</li>\n<li>the request is made within <strong>3 years and 75 days</strong> of the intended effective date.</li>\n</ul>\n<p>The request is made by filing Form 2553 with the reasonable-cause statement written on it. Note that everyone involved generally has to have reported consistently with S-corporation status in the meantime — retroactively rewriting how income was reported is a much harder position than simply filing late.</p>\n\n<h2>What to do before March 16</h2>\n<ol>\n<li>Confirm eligibility, particularly the single-class-of-stock test against your operating agreement.</li>\n<li>Collect every shareholder's signature — this is usually the step that runs out of time.</li>\n<li>File Form 2553 by mail or fax to the service center for your state, per the form instructions.</li>\n<li>Keep proof of filing. The IRS should send a determination letter; if nothing arrives within about 60 days, follow up rather than assuming it went through.</li>\n</ol>\n<p>And a separate point worth stating plainly: making the election on time says nothing about whether it is a good idea for you. S status brings a payroll obligation, reasonable-compensation exposure and an extra return. The deadline is just the deadline.</p>",
+  "tags": ["S corporation", "Form 2553", "entity choice", "deadlines"],
+  "faqItems": [
+    {
+      "question": "Can I file Form 2553 with my tax return instead?",
+      "answer": "No. Form 2553 is filed separately, by mail or fax to the IRS service center listed in the form instructions, and it is not attached to Form 1120-S in the ordinary case. The only common exception is a late election under the simplified relief procedure, which can in some circumstances be filed with a late-filed Form 1120-S."
+    },
+    {
+      "question": "Does my LLC have to become a corporation first?",
+      "answer": "No. An eligible LLC can elect S-corporation status directly by filing Form 2553, which is treated as also making the election to be classified as a corporation. Filing Form 8832 separately is not required in that case."
+    },
+    {
+      "question": "What happens if I file after March 16, 2026?",
+      "answer": "By default the election takes effect for the 2027 tax year instead of 2026. If you wanted 2026 and can show the failure was solely a late filing with reasonable cause, the simplified relief procedure allows a request within 3 years and 75 days of the intended effective date."
+    },
+    {
+      "question": "Do all shareholders really have to sign?",
+      "answer": "Yes. Consent from every person who is a shareholder on the day the election is made is a statutory requirement, and for an election effective at the start of the year it also has to cover anyone who held shares earlier in that year. An unsigned consent invalidates the election."
+    }
+  ],
+  "sources": [
+    {
+      "label": "IRS, Instructions for Form 2553",
+      "url": "https://www.irs.gov/instructions/i2553",
+      "detail": "When To Make the Election; Late Election Relief; shareholder consent"
+    },
+    {
+      "label": "IRC § 1362(b)",
+      "url": "https://www.law.cornell.edu/uscode/text/26/1362",
+      "detail": "When election effective — the 2-month-and-15-day rule"
+    },
+    {
+      "label": "IRC § 1361(b)",
+      "url": "https://www.law.cornell.edu/uscode/text/26/1361",
+      "detail": "Small business corporation — shareholder limits and one class of stock"
+    },
+    {
+      "label": "IRC § 7503",
+      "url": "https://www.law.cornell.edu/uscode/text/26/7503",
+      "detail": "Time for performance of acts where last day falls on Saturday, Sunday, or legal holiday"
+    },
+    {
+      "label": "IRS, S Corporations",
+      "url": "https://www.irs.gov/businesses/small-businesses-self-employed/s-corporations",
+      "detail": "Eligibility requirements overview"
+    }
+  ],
+  "taxYear": 2026,
+  "coverImageUrl": null,
+  "coverImageAlt": null,
+  "readingTimeMinutes": 6,
+  "featured": false,
+  "publishedAt": "2026-08-17T00:00:00.000Z",
+  "lastReviewed": "2026-08-17T00:00:00.000Z",
+  "sourceFileName": null
+}

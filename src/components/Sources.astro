@@ -1,0 +1,29 @@
+---
+import type { Source } from "../data/articles";
+
+export interface Props {
+  sources: Source[];
+  lastReviewed?: string | null;
+}
+const { sources } = Astro.props;
+---
+{
+  sources.length > 0 && (
+    <section class="article-sources" aria-labelledby="sources-heading">
+      <span>Primary sources</span>
+      <h2 id="sources-heading">Where these rules come from</h2>
+      <ol>
+        {sources.map((s) => (
+          <li>
+            <a href={s.url} target="_blank" rel="noopener nofollow">{s.label}</a>
+            {s.detail ? ` — ${s.detail}` : ""}
+          </li>
+        ))}
+      </ol>
+      <p class="src-note">
+        Links go to the IRS or to the Internal Revenue Code itself. If a source
+        has been updated since this column was reviewed, the source wins.
+      </p>
+    </section>
+  )
+}

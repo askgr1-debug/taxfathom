@@ -1,0 +1,81 @@
+---
+import Base from "../layouts/Base.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { site, author, sections } from "../data/site";
+
+const base = Astro.site?.toString() ?? site.url;
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    name: `About ${site.name}`,
+    url: new URL("/about/", base).toString(),
+    mainEntity: {
+      "@type": "Person",
+      name: author.name,
+      description: author.bio,
+      ...(author.sameAs.length ? { sameAs: author.sameAs } : {}),
+    },
+  },
+];
+---
+<Base title={`About | ${site.name}`} description={`Who writes ${site.name} and how the columns are researched.`} path="/about/" jsonLd={jsonLd}>
+  <div class="article-page">
+    <Header />
+    <main class="static-main">
+      <p class="static-eyebrow">About</p>
+      <h1>Who writes this, and how</h1>
+
+      <p>
+        {site.name} publishes plain-English columns on U.S. federal tax rules. Each
+        column answers one question, states the rule, and links the IRS publication
+        or Internal Revenue Code section it comes from.
+      </p>
+
+      <h2>The author</h2>
+      <p><strong>{author.name}</strong> — {author.role}</p>
+      <p>{author.bio}</p>
+      <p>
+        <strong>What I am not:</strong> I am not a CPA, an enrolled agent or a tax
+        attorney. I hold no U.S. tax credential of any kind, I do not prepare or
+        review returns, and I cannot represent anyone before the IRS. Working at a
+        tax firm in Korea gives me no standing in U.S. tax whatsoever — it is
+        where I learned to read a rule at its source, and that is all it is.
+        Nothing on this site is professional tax advice.
+      </p>
+
+      <h2>How a column gets written</h2>
+      <ul>
+        <li>Start from one question a real filer would type into a search box.</li>
+        <li>Find the rule in the primary source — an IRS publication, form instructions, the Internal Revenue Code or a Treasury regulation.</li>
+        <li>Write the answer in plain English, with the numbers and deadlines that apply.</li>
+        <li>List every source at the foot of the column so you can check it yourself.</li>
+        <li>Re-check year-specific columns when the IRS publishes new figures, and stamp the review date on the page.</li>
+      </ul>
+
+      <h2>What we cover</h2>
+      <ul>
+        {sections.map((s) => (
+          <li><strong>{s.label}</strong> — {s.description} ({s.topics})</li>
+        ))}
+      </ul>
+
+      <h2>Corrections</h2>
+      <p>
+        Tax rules change and mistakes happen. If a column is wrong or out of date,
+        say so and it gets fixed — corrections are made on the page itself with an
+        updated review date, not quietly deleted.
+      </p>
+
+      <h2>How this site makes money</h2>
+      <p>
+        Through display advertising, affiliate links to software, and a free
+        newsletter. Affiliate links never change what a column says, and no product
+        is recommended for paying us. See the
+        <a href="/disclaimer/">editorial policy</a> for the full disclosure.
+      </p>
+    </main>
+    <Footer />
+  </div>
+</Base>

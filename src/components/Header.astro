@@ -1,0 +1,50 @@
+---
+import BrandLockup from "./BrandLockup.astro";
+import { site } from "../data/site";
+
+const nav = [
+  { label: "Latest", href: "/#latest" },
+  { label: "All columns", href: "/#articles" },
+  { label: "Sections", href: "/#filters" },
+  { label: "About", href: "/about/" },
+];
+---
+<header class="site-header">
+  <div class="page-shell header-inner">
+    <a href="/" aria-label={`${site.name} home`}><BrandLockup /></a>
+    <nav class="desktop-nav" aria-label="Site sections">
+      {nav.map((n) => <a href={n.href}>{n.label}</a>)}
+    </nav>
+    <div class="header-actions">
+      <a href="/#articles" aria-label="Search columns"><span>Search</span></a>
+      <button
+        type="button"
+        class="mobile-menu-button"
+        id="mobileToggle"
+        aria-expanded="false"
+        aria-controls="mobileNav"
+        aria-label="Open menu"
+      >☰</button>
+    </div>
+  </div>
+  <nav id="mobileNav" class="mobile-nav" aria-label="Site sections">
+    {nav.map((n) => <a href={n.href}>{n.label}</a>)}
+  </nav>
+</header>
+
+<script>
+  const mobileToggle = document.getElementById("mobileToggle");
+  const mobileNav = document.getElementById("mobileNav");
+  if (mobileToggle && mobileNav) {
+    mobileToggle.addEventListener("click", () => {
+      const open = mobileNav.classList.toggle("open");
+      mobileToggle.setAttribute("aria-expanded", String(open));
+    });
+    mobileNav.querySelectorAll("a").forEach((a) =>
+      a.addEventListener("click", () => {
+        mobileNav.classList.remove("open");
+        mobileToggle.setAttribute("aria-expanded", "false");
+      })
+    );
+  }
+</script>

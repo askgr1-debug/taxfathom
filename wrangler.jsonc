@@ -1,0 +1,10 @@
+{
+  // Cloudflare static asset deployment — serves the Astro dist/ output as-is.
+  "name": "taxatlas",
+  "compatibility_date": "2024-12-01",
+  "assets": {
+    "directory": "./dist",
+    // Serve Astro's generated 404 page for unknown paths.
+    "not_found_handling": "404-page"
+  }
+}

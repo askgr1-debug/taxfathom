@@ -1,0 +1,21 @@
+---
+// Shown at the foot of every column. On a YMYL site this is both a trust
+// signal for search engines and the honest framing of what the site is.
+export interface Props {
+  /** Tax year the column describes, if it is year-specific. */
+  taxYear?: number | null;
+}
+const { taxYear = null } = Astro.props;
+---
+<aside class="site-disclaimer">
+  <strong>Disclaimer</strong>
+  <p>
+    This column is general information about U.S. federal tax rules{
+      taxYear ? ` as they apply to the ${taxYear} tax year` : ""
+    }. It is not tax, legal or financial advice, and reading it does not create
+    a professional relationship. Tax outcomes depend on facts this page cannot
+    know, and state rules may differ from the federal rules described here.
+    Before you act, check the cited sources and consider talking to a licensed
+    tax professional — a CPA, an enrolled agent or a tax attorney.
+  </p>
+</aside>

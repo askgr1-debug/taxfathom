@@ -1,0 +1,40 @@
+---
+import BrandLockup from "./BrandLockup.astro";
+import { site, sections, author } from "../data/site";
+
+const pages = [
+  { name: "About", href: "/about/" },
+  { name: "Editorial policy & disclaimer", href: "/disclaimer/" },
+  { name: "Privacy", href: "/privacy/" },
+  { name: "RSS", href: "/rss.xml" },
+];
+const year = new Date().getUTCFullYear();
+---
+<footer class="site-footer">
+  <div class="page-shell footer-inner">
+    <div class="footer-main">
+      <a href="/"><BrandLockup /></a>
+      <p class="footer-tagline">{site.tagline}</p>
+      <p class="footer-desc">
+        Every column cites the IRS publication, Internal Revenue Code section or Treasury
+        regulation it relies on, so you can check the rule at its source.
+      </p>
+      <p class="footer-contact">
+        Written by {author.name}{author.role ? ` · ${author.role}` : ""}
+      </p>
+    </div>
+    <nav class="footer-links" aria-label="Site pages">
+      <span class="footer-links-title">Sections</span>
+      {sections.map((s) => <a href={`/#${s.id}`}>{s.label}</a>)}
+      <span class="footer-links-title" style="margin-top:14px">Site</span>
+      {pages.map((p) => <a href={p.href}>{p.name}</a>)}
+    </nav>
+  </div>
+  <div class="page-shell footer-bottom">
+    <span class="footer-byline">© {year} {site.name}</span>
+    <span class="footer-byline">
+      General information, not tax advice. See the
+      <a href="/disclaimer/">full disclaimer</a>.
+    </span>
+  </div>
+</footer>

@@ -1,0 +1,11 @@
+# Cloudflare builds on Linux; keep everything LF in the repository so the
+# build never sees stray CRLF regardless of who committed from where.
+* text=auto eol=lf
+
+# PowerShell stays CRLF — it only ever runs on the Windows box.
+*.ps1 text eol=crlf
+
+# Binary
+*.png binary
+*.jpg binary
+*.ico binary
