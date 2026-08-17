@@ -1,20 +1,20 @@
 /**
  * Import drafts produced by the writing workflow at D:\TAX_Writing.
  *
- * That workflow emits three files per article into its output/ folder:
+ * That workflow emits two files per article into its output/ folder:
  *   <ts>_<slug>.html       standalone preview (this is where the body lives)
- *   <ts>_<slug>.md         portable markdown body
- *   <ts>_<slug>.meta.json  title / slug / excerpt / faq / sources / ...
+ *   <ts>_<slug>.meta.json  title / slug / excerpt / faq / sources / section ...
  *
- * This converts each triple into one src/columns/<slug>.json.
+ * This converts each pair into one src/columns/<slug>.json.
  *
  *   node scripts/import-drafts.mjs                  # import everything new
  *   node scripts/import-drafts.mjs --force          # also overwrite existing
  *   WRITING_DIR="D:/TAX_Writing" node scripts/...   # override source location
  *
- * The body is taken from the .html rather than the .md so that inline SVG
- * infographics survive. Blocks the site renders from structured data instead
- * (FAQ, sources, disclaimer) are stripped out here so they are not duplicated.
+ * The body is taken from the .html so that inline SVG infographics survive.
+ * Blocks the site renders from structured data instead (FAQ, sources,
+ * disclaimer) are stripped out here so they are not duplicated. A re-import
+ * with --force is idempotent: issueNumber and publishedAt are preserved.
  */
 import { readdirSync, readFileSync, writeFileSync, existsSync } from "node:fs";
 import path from "node:path";
@@ -185,18 +185,25 @@ for (const metaFile of metas.sort()) {
     ? `${tsMatch[1]}-${tsMatch[2]}-${tsMatch[3]}T00:00:00.000Z`
     : new Date().toISOString();
 
-  // Preserve the original publish date when re-importing over an existing file.
+  // Re-importing (--force) must be idempotent: keep the original publish date
+  // AND the original issue number. A fresh number is assigned (and consumed)
+  // only for a genuinely new column, so a re-import never reshuffles ordering.
   let publishedAt = tsIso;
+  let issueNumber;
   if (existsSync(target)) {
     try {
-      publishedAt = JSON.parse(readFileSync(target, "utf8")).publishedAt ?? tsIso;
+      const prev = JSON.parse(readFileSync(target, "utf8"));
+      publishedAt = prev.publishedAt ?? tsIso;
+      issueNumber = Number.isFinite(prev.issueNumber) ? prev.issueNumber : issue++;
     } catch {
-      /* noop */
+      issueNumber = issue++;
     }
+  } else {
+    issueNumber = issue++;
   }
 
   const article = {
-    issueNumber: issue++,
+    issueNumber,
     title: meta.title ?? "",
     slug,
     section: meta.section ?? mapped.section,
