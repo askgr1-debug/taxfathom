@@ -15,6 +15,15 @@ const DIR = path.join(ROOT, "src/columns");
 const SECTIONS = new Set(["selfemployed", "crossborder", "property", "personal"]);
 
 // Sources must point at primary law/guidance, not at commentary.
+//
+// Keep this in sync with the writing workflow's Tier 1 list
+// (D:\TAX_Writing\instructions\04-sources.md). A host the workflow tells the
+// agent to cite but that is missing here does not produce a bad column — it
+// stops the build outright, which is a worse failure than it looks.
+//
+// Federal primary sources only. State revenue departments are deliberately
+// absent: there are ~50 of them, allow-listing that surface would weaken the
+// guarantee this check exists to make, and the site is federal-scope for now.
 const ALLOWED_SOURCE_HOSTS = [
   "www.irs.gov",
   "irs.gov",
@@ -33,6 +42,14 @@ const ALLOWED_SOURCE_HOSTS = [
   "fincen.gov",
   "www.fincen.gov",
   "bsaefiling.fincen.treas.gov",
+  // The U.S. Code as published by the House — the statute itself, and the
+  // citation the writing workflow reaches for on Code sections.
+  "uscode.house.gov",
+  "www.uscode.house.gov",
+  // Tax Court opinions. Primary law, and the only place some holdings appear.
+  "ustaxcourt.gov",
+  "www.ustaxcourt.gov",
+  "dawson.ustaxcourt.gov",
 ];
 
 // Titles and experience this site must never claim. See src/data/site.ts.
