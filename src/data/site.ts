@@ -27,12 +27,12 @@ export const author = {
   credential: null as string | null,
   bio: "I work at a tax accounting firm in South Korea. TaxAtlas is a personal project, unconnected to my employer, and everything here is my own work. What I bring to it is a habit built at that job: read the primary source, not a summary of it. Every column is written from the IRS publication, Code section or regulation itself, with the citation attached so you can check it against the source.",
   /**
-   * Public profiles, used for Person sameAs in structured data. Still empty —
-   * without at least one corroborating profile the author entity has nothing
-   * for a search engine to verify against, which is the weakest link on a
-   * YMYL site. LinkedIn is the highest-value one to add.
+   * Public profiles, used for Person sameAs in structured data — this is what
+   * a search engine follows to verify the author exists. Percent-encoded
+   * because the LinkedIn vanity path contains Hangul; some crawlers handle
+   * raw non-ASCII IRIs inconsistently, and the encoded form resolves the same.
    */
-  sameAs: [] as string[],
+  sameAs: ["https://www.linkedin.com/in/%EC%9E%AC%ED%98%95-%EC%95%88-74a19726b"] as string[],
 } as const;
 
 /**

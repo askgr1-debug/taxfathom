@@ -79,9 +79,11 @@ Publishing: `powershell -ExecutionPolicy Bypass -File D:\TAX_BLOG\publish.ps1`
 ## Before the first publish
 
 - [ ] Buy the domain; confirm the trademark is clear.
-- [ ] Add at least one profile URL to `author.sameAs` in `src/data/site.ts`.
-      Without it a search engine has nothing to verify the author against,
-      which is the weakest link on a YMYL site.
+- [ ] Make the LinkedIn profile corroborate the byline. `author.sameAs` points
+      at it, but a crawler that follows the link has to find the same person:
+      the profile's display name should read **Jae Hyung Ahn**, not only the
+      Hangul form. Changing the LinkedIn vanity URL means updating
+      `author.sameAs` in `src/data/site.ts` to match.
 - [ ] Point `NEWSLETTER_ACTION` in `src/data/cta.ts` at a real provider endpoint.
 - [ ] Replace `public/og-default.png` with a designed 1200×630 card
       (`node scripts/make-og.mjs` only paints a branded placeholder).
