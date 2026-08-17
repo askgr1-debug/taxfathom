@@ -6,7 +6,6 @@ import Sources from "../../components/Sources.astro";
 import Disclaimer from "../../components/Disclaimer.astro";
 import { site, author, getSection, sections } from "../../data/site";
 import { getAllArticles, getArticleBySlug, formatDate } from "../../data/articles";
-import { resolveCta } from "../../data/cta";
 
 export function getStaticPaths() {
   return getAllArticles().map((a) => ({ params: { slug: a.slug } }));
@@ -19,7 +18,6 @@ if (!article) {
 }
 
 const section = getSection(article.section);
-const cta = resolveCta(article);
 
 // Same-topic columns first — internal linking builds the topic cluster.
 const all = getAllArticles();
@@ -187,26 +185,6 @@ if (article.faqItems.length > 0) {
           </ul>
         </section>
       )}
-
-      <section class="article-cta">
-        <div class="cta-label">{cta.eyebrow}</div>
-        <h3>{cta.heading}</h3>
-        {cta.body.map((line) => <p>{line}</p>)}
-        <form class="cta-subscribe" action={cta.formAction} method="post" target="_blank">
-          <label class="sr-only" for="cta-email">Email address</label>
-          <input
-            type="email"
-            id="cta-email"
-            name="email"
-            required
-            placeholder="you@example.com"
-            autocomplete="email"
-          />
-          <button type="submit" class="cta-btn">{cta.buttonLabel} →</button>
-        </form>
-        {cta.affiliateNote && <p class="affiliate-note">{cta.affiliateNote}</p>}
-        <p class="cta-brandmark">{site.wordmark}</p>
-      </section>
 
       <Disclaimer taxYear={article.taxYear} />
     </main>
