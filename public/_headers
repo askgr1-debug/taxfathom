@@ -1,0 +1,23 @@
+# Cloudflare (and any CDN that honors _headers) cache policy.
+# Astro copies this file into dist/ verbatim.
+
+# Content-hashed build assets never change under a given name — cache hard.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Fixed-name assets DO change in place (og image, favicon). Let the edge cache
+# them but revalidate, so a redeploy is picked up without a manual purge.
+/og-default.png
+  Cache-Control: public, max-age=3600, must-revalidate
+/favicon.svg
+  Cache-Control: public, max-age=3600, must-revalidate
+
+# Feeds and machine files: short cache, always revalidate.
+/rss.xml
+  Cache-Control: public, max-age=3600, must-revalidate
+/llms.txt
+  Cache-Control: public, max-age=3600, must-revalidate
+/sitemap-index.xml
+  Cache-Control: public, max-age=3600, must-revalidate
+/sitemap-0.xml
+  Cache-Control: public, max-age=3600, must-revalidate
